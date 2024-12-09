@@ -7,13 +7,14 @@ const char* ssid = "KdG-iDev";           // Replace with your WiFi SSID
 const char* password = "rpiAzeG4JNHEPnvN";  // Replace with your WiFi password
 
 // Server information
-const char* serverAddress = "10.134.217.206";  // Replace with your server address or IP
+const char* serverAddress = "10.134.217.205";  // Replace with your server address or IP
 int port = 8080;                              // Replace with your server's port (e.g., 80 for HTTP)
 
 // Sensor and endpoint configuration
 #define SENSOR_PIN 2
-const char* motionEndpoint = "/motion";
-const char* tempEndpoint = "/temperature";
+const char* endpoint = "/sensor-data";
+int deviceId = 1;
+// const char* tempEndpoint = "/temperature";
 
 // State tracking for sensors
 int motion_state = LOW;
@@ -80,36 +81,63 @@ void setup() {
 
 void loop() {
 
-  // Handle motion detection
+//   // Handle motion detection
+//   prev_motion_state = motion_state;
+//   motion_state = digitalRead(SENSOR_PIN);
+
+//   if (prev_motion_state == LOW && motion_state == HIGH) {
+//     Serial.println("Motion detected!");
+//     String motionData = "{\"motionStatus\": true}";
+//     // sendDataToServer(endpoint, motionData);
+//     // Serial.println("Motion data sent to server.");
+//   } else if (prev_motion_state == HIGH && motion_state == LOW) {
+//     Serial.println("No Motion detected!");
+//     String motionData = "{\"motionStatus\": false}";
+//     // sendDataToServer(endpoint, motionData);
+//   }
+
+
+//     // Handle temperature reading
+//     float temperature = mlx.readObjectTempC();  // Read object temperature in Celsius
+//     if (abs(old_temp - temperature) >= 0.5) {
+//       old_temp = temperature;
+//       Serial.print("Temperature = ");
+//       Serial.print(temperature);
+//       Serial.println(" °C");
+
+//       String tempData = "{\"temperatureValue\": " + String(temperature) + "}";
+//       // sendDataToServer(endpoint, tempData);
+//       // Serial.println("Temperature data sent to server.");
+//     }
+
+// Handle motion detection
   prev_motion_state = motion_state;
   motion_state = digitalRead(SENSOR_PIN);
+  boolean motionDetected = (prev_motion_state == LOW && motion_state == HIGH);
 
-  if (prev_motion_state == LOW && motion_state == HIGH) {
-    Serial.println("Motion detected!");
-    String motionData = "{\"motionStatus\": true}";
-    sendDataToServer(motionEndpoint, motionData);
-    Serial.println("Motion data sent to server.");
-  } else if (prev_motion_state == HIGH && motion_state == LOW) {
-    Serial.println("No Motion detected!");
-    String motionData = "{\"motionStatus\": false}";
-    sendDataToServer(motionEndpoint, motionData);
-  }
+  float temperature = mlx.readObjectTempC();
+  bool temperatureChanged = abs(old_temp - temperature) >= 0.5;
+  Serial.println(motion_state);
+  Serial.println(temperature);
 
+  //  if (temperatureChanged) {
+    old_temp = temperature;
+  
 
-    // Handle temperature reading
-    float temperature = mlx.readObjectTempC();  // Read object temperature in Celsius
-    if (abs(old_temp - temperature) >= 0.5) {
-      old_temp = temperature;
-      Serial.print("Temperature = ");
-      Serial.print(temperature);
-      Serial.println(" °C");
-
-      String tempData = "{\"temperatureValue\": " + String(temperature) + "}";
-      sendDataToServer(tempEndpoint, tempData);
-      Serial.println("Temperature data sent to server.");
+    String jsonData = "{";
+    if (motionDetected) {
+      jsonData += "\"motionStatus\": true";
+    } else{
+      jsonData += "\"motionStatus\": false";
     }
-
-
+    jsonData += ", \"temperatureValue\": " + String(temperature);
+    jsonData += ", \"deviceId\": " + String(deviceId);
+    jsonData += "}";
+    Serial.println("it can get to here bitch" + jsonData);
+    sendDataToServer(endpoint, jsonData);
+    Serial.println("Combined data sent to server: " + jsonData);
+  //  }
+    
   // Delay to avoid spamming the server
   delay(1000);
 }
