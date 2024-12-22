@@ -1,93 +1,110 @@
-# Arduino_Team7
+# Kitchen Danger Guard Project
 
+## Team 7
 
+## Team Members
+- **Khaled Asfour**
+- **Viktória Dobišová**
+- **Nang Cherry Naw**
+- **Deren Ozen**
+- **Alec Tuffin**
 
-## Getting started
+## Responsibilities
+- **Alec Tuffin**: Responsible for motion sensor integration and Wifi connection.
+- **Deren Ozen**: Responsible for temperature sensor integration and server communication, and data transmission.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Reviewer
+- **Viktória Dobišová**: Responsible for testing and reviewing the functionality of project.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Project Overview
 
-## Add your files
+- The Kitchen Danger Guard project combines a motion sensor and an infrared temperature sensor to monitor kitchen conditions. Data from these sensors is sent to a remote server via WiFi for analysis and potential alerts.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Installation and Configuration Instructions
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/kdg-ti/integration-2.1/24-25/team-7/arduino_team7.git
-git branch -M main
-git push -uf origin main
-```
+1. **Install the Arduino IDE**: 
+   - Download and install the Arduino IDE from [Arduino Official Website](https://www.arduino.cc/en/software).
 
-## Integrate with your tools
+2. **Set up the Arduino Board**:
+   - Open the Arduino IDE and select your Arduino board model under **Tools > Board**.
 
-- [ ] [Set up project integrations](https://gitlab.com/kdg-ti/integration-2.1/24-25/team-7/arduino_team7/-/settings/integrations)
+3. **Install Required Libraries**:
+   The following libraries must be installed via the Arduino Library Manager:
+   
+   - **WiFiS3** 
 
-## Collaborate with your team
+   - **ArduinoHttpClient** 
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+   - **Adafruit_MLX90614** 
 
-## Test and Deploy
+4. **Configure WiFi Credentials**:
+   - Open the `.ino` file in the Arduino IDE.
+   - Modify the following lines with your own WiFi credentials:
+     ```cpp
+     const char* ssid = "Your_WiFi_SSID";
+     const char* password = "Your_WiFi_Password";
+     ```
 
-Use the built-in continuous integration in GitLab.
+5. **Upload the Code**:
+   - Once the libraries are installed and WiFi credentials are set, connect your Arduino board to your computer and upload the code via **Sketch > Upload**.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+6. **Monitor the Output**:
+   - Open the **Serial Monitor** (under **Tools > Serial Monitor**) to view the output and see if the system connects to WiFi and sends data to the server correctly.
 
-***
+## Hardware(Sensor) Specifications
 
-# Editing this README
+- **Adafruit MLX90614** (Infrared Temperature Sensor):
+  - Measures ambient and object temperature.
+  - Interface: I2C
+  - Operating Voltage: 3.3V to 5V
+  - Measurement Range: -70°C to +380°C
+  - Accuracy: ±0.5°C (for object temperatures between -20°C to 85°C)
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- **Motion Sensor**:
+  - Type: Passive Infrared (PIR) sensor
+  - Interface: Digital Output
+  - Operating Voltage: 5V
+  - Detects motion in the surrounding environment and outputs a HIGH signal when motion is detected.
 
-## Suggestions for a good README
+## Software Functionality
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- Motion Detection: Monitors for movement using a PIR motion sensor.
 
-## Name
-Choose a self-explaining name for your project.
+- Temperature Monitoring: Reads object temperature using the MLX90614 sensor.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- WiFi Communication: Sends JSON-formatted sensor data to a server over HTTP.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- **Data Format**
+   - The data sent to the server is formatted as a JSON object:
+   {
+  "motionStatus": true,
+  "temperatureValue": 25.6,
+  "deviceId": 1
+   }
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Libraries Used
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+1. **WiFiS3 Library**:
+   - Used to connect the Arduino board to a WiFi network.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+2. **ArduinoHttpClient Library**:
+   - Provides HTTP request handling functionality to send sensor data to the server.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+3. **Adafruit MLX90614 Library**:
+   - Provides an easy interface to communicate with the MLX90614 temperature sensor.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Troubleshooting
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+1. **WiFi Connection Issues**:
+   - Make sure your WiFi credentials are entered correctly in the code.
+   - Check that your Arduino board is within range of the WiFi network.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+2. **Sensor Initialization**:
+   - If the MLX90614 sensor is not initialized correctly, check the wiring and ensure that the sensor is properly connected to the I2C pins of your Arduino.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+3. **Server Communication**:
+   - Verify the server's IP address and port in the code. Ensure that the server is accessible from the network your Arduino is connected to.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Notes
+- This project is designed to send sensor data (motion and temperature) over HTTP to a server. Ensure the server is set up to handle the incoming requests at the specified endpoint (`/sensor-data`).
+- The system includes visual feedback with an LED to indicate motion detection.
