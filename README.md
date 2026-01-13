@@ -1,8 +1,6 @@
 # Kitchen Danger Guard Project
 
-## Team 7
-
-## Team Members
+## Authors
 - **Khaled Asfour**
 - **Viktória Dobišová**
 - **Nang Cherry Naw**
