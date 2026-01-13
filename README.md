@@ -9,16 +9,10 @@
 - **Deren Ozen**
 - **Alec Tuffin**
 
-## Responsibilities
-- **Alec Tuffin**: Responsible for motion sensor integration and Wifi connection.
-- **Deren Ozen**: Responsible for temperature sensor integration and server communication, and data transmission.
-
-## Reviewer
-- **Viktória Dobišová**: Responsible for testing and reviewing the functionality of project.
-
 ## Project Overview
 
 - The Kitchen Danger Guard project combines a motion sensor and an infrared temperature sensor to monitor kitchen conditions. Data from these sensors is sent to a remote server via WiFi for analysis and potential alerts.
+- This project depends on other repositories named KitchenDangerGuard - namely backend and predictions. They should be treated as one project and ran together.
 
 ## Installation and Configuration Instructions
 
